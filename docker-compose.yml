@@ -1,0 +1,36 @@
+version: '3.4'
+services:
+  webserver:
+    container_name: webserver
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    volumes:
+      - ./www:/var/www/html
+    ports:
+      - 80:80
+  database:
+    container_name: database
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: lenr123
+      MYSQL_DATABASE: woltlab
+      MYSQL_USER: woltlab
+      MYSQL_PASSWORD: woltlab123
+    ports:
+      - 3306:3306
+    volumes:
+      - ./dbdata:/var/lib/mysql
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    restart: always
+    environment:
+      PMA_HOST: database
+    depends_on:
+      - database
